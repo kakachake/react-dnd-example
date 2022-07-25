@@ -161,6 +161,7 @@ function DeleteBucket() {
       }}
     >
       {canDrop && <h1>删除该元素</h1>}
+      删除
     </div>
   );
 }
