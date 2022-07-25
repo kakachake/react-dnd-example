@@ -1,0 +1,15 @@
+.drop-zone {
+  border: 2px dashed #0087f7;
+  border-radius: 5px;
+  background-color: #fafafa;
+  padding: 25px;
+  text-align: center;
+}
+.box {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 5px;
+  padding: 25px;
+  text-align: center;
+}
