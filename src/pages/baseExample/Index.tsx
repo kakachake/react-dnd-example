@@ -1,15 +1,19 @@
-import { FC, useState } from "react";
+import { relative } from "path";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useDrag, useDragLayer, useDrop } from "react-dnd";
+import update from "immutability-helper";
 import "./Index.css";
 type Item = {
   _id: string;
   isDraged?: boolean;
   onremoveCb?: () => void;
+  left?: number;
+  top?: number;
 };
 
 interface IndexProps {}
 
-function Box({ _id, isDraged = false, onremoveCb }: Item) {
+function Box({ _id, isDraged = false, onremoveCb, left, top }: Item) {
   const [{ isDragging }, drag, dragPreview] = useDrag(() => {
     return {
       type: "BOX",
@@ -23,6 +27,8 @@ function Box({ _id, isDraged = false, onremoveCb }: Item) {
       end: (item, monitor) => {
         console.log(item);
         console.log(monitor.didDrop());
+        console.log(monitor.getDropResult());
+
         const msg = (monitor.getDropResult() as any)?.msg;
         if (msg === "remove") {
           onremoveCb && onremoveCb();
@@ -32,7 +38,15 @@ function Box({ _id, isDraged = false, onremoveCb }: Item) {
   }, [_id]);
 
   return (
-    <div ref={dragPreview} style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <div
+      ref={dragPreview}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        position: isDraged ? "absolute" : "relative",
+        left: left ? left + "px" : 0,
+        top: top ? top + "px" : 0,
+      }}
+    >
       <div className="box" role="handle" ref={drag}>
         ♘{_id}
       </div>
@@ -42,6 +56,10 @@ function Box({ _id, isDraged = false, onremoveCb }: Item) {
 
 function Bucket() {
   const [itemList, setItemList] = useState<any[]>([]);
+  const offset = useRef<{
+    x: number;
+    y: number;
+  } | null>();
   const [{ canDrop, isOver }, drop] = useDrop<
     {
       id: string;
@@ -60,9 +78,33 @@ function Bucket() {
         canDrop: monitor.canDrop(),
       }),
       drop: (item, monitor) => {
-        console.log(item);
-        if (item.isDraged) return;
-        setItemList([...itemList, item.id]);
+        const delta = monitor.getSourceClientOffset();
+        console.log(offset.current);
+        console.log(delta);
+
+        if (item.isDraged) {
+          const idx = itemList.findIndex((value) => value.id === item.id);
+          setItemList(
+            update(itemList, {
+              [idx]: {
+                $merge: {
+                  id: item.id,
+                  left: delta!.x - offset.current!.x,
+                  top: delta!.y - offset.current!.y,
+                },
+              },
+            })
+          );
+        } else {
+          setItemList([
+            ...itemList,
+            {
+              id: item.id + Math.floor(Math.random() * 9999),
+              left: delta!.x - offset.current!.x,
+              top: delta!.y - offset.current!.y,
+            },
+          ]);
+        }
         return {
           msg: "drop success",
         };
@@ -70,9 +112,20 @@ function Bucket() {
     }),
     [itemList]
   );
-  function removeItem(idx: number) {
-    setItemList(itemList.filter((_, i) => i !== idx));
-  }
+  useEffect(() => {
+    const dropArea = document.getElementById("dropArea");
+    offset.current = {
+      x: dropArea!.offsetLeft,
+      y: dropArea!.offsetTop,
+    };
+  }, []);
+  const removeItem = useCallback(
+    (id: number) => {
+      setItemList(itemList.filter((_, i) => _.id !== id));
+    },
+    [itemList]
+  );
+
   return (
     <div
       ref={drop}
@@ -80,20 +133,26 @@ function Bucket() {
       className={"drop-zone"}
       style={{
         backgroundColor: isOver ? "rgba(211, 64, 64, 0.467)" : "white",
+        height: "400px",
+        boxSizing: "border-box",
       }}
     >
       {canDrop ? <div>放入</div> : <div>拖拽</div>}
+      <DragLayerComponent />
       <div
+        id="dropArea"
         style={{
-          display: "flex",
+          position: "relative",
         }}
       >
-        {itemList.map((id, idx) => (
+        {itemList.map((item, idx) => (
           <Box
             key={idx}
-            _id={id}
+            _id={item.id}
+            left={item.left}
+            top={item.top}
             isDraged={true}
-            onremoveCb={() => removeItem(idx)}
+            onremoveCb={() => removeItem(item.id)}
           />
         ))}
       </div>
@@ -102,6 +161,15 @@ function Bucket() {
 }
 
 function DragLayerComponent(props: any) {
+  const layerStyles = {
+    position: "fixed",
+    pointerEvents: "none",
+    zIndex: 100,
+    left: 0,
+    top: 0,
+    width: "100%",
+    height: "100%",
+  };
   const collectedProps = useDragLayer((monitor) => ({
     item: monitor.getItem(),
     itemType: monitor.getItemType(),
@@ -109,19 +177,42 @@ function DragLayerComponent(props: any) {
     initialOffset: monitor.getInitialSourceClientOffset(),
     isDragging: monitor.isDragging(),
   }));
+  function getItemStyles(initialOffset: any, currentOffset: any) {
+    if (!initialOffset || !currentOffset) {
+      return {
+        // display: "none",
+      };
+    }
+    let { x, y } = currentOffset;
+
+    const transform = `translate(${x}px, ${y}px)`;
+    return {
+      transform,
+      WebkitTransform: transform,
+      width: "200px",
+      height: "200px",
+    };
+  }
   return (
-    <div className="drag-layer" style={{}}>
-      {collectedProps.item && (
-        <div>
-          <div>{collectedProps.item.id}</div>
-          <div>{collectedProps.itemType?.toString()}</div>
-          <div>currentOffset.x:{collectedProps.currentOffset?.x}</div>
-          <div>currentOffset.y:{collectedProps.currentOffset?.y}</div>
-          <div>initialOffset.x{collectedProps.initialOffset?.x}</div>
-          <div>initialOffset.y{collectedProps.initialOffset?.y}</div>
-          <div>{collectedProps.isDragging}</div>
-        </div>
-      )}
+    <div className="drag-layer" style={layerStyles as React.CSSProperties}>
+      <div
+        style={getItemStyles(
+          collectedProps.initialOffset,
+          collectedProps.currentOffset
+        )}
+      >
+        {collectedProps.item && (
+          <div>
+            <div>{collectedProps.item.id}</div>
+            <div>{collectedProps.itemType?.toString()}</div>
+            <div>currentOffset.x:{collectedProps.currentOffset?.x}</div>
+            <div>currentOffset.y:{collectedProps.currentOffset?.y}</div>
+            <div>initialOffset.x{collectedProps.initialOffset?.x}</div>
+            <div>initialOffset.y{collectedProps.initialOffset?.y}</div>
+            <div>{collectedProps.isDragging}</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -157,6 +248,7 @@ function DeleteBucket() {
       role={"Dustbin"}
       className={"drop-zone"}
       style={{
+        position: "relative",
         backgroundColor: isOver ? "rgba(211, 64, 64, 0.467)" : "white",
       }}
     >
@@ -176,7 +268,6 @@ const Index: FC<IndexProps> = () => {
 
       <Bucket />
       <DeleteBucket />
-      <DragLayerComponent />
     </div>
   );
 };

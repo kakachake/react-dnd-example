@@ -8,6 +8,7 @@ specifiers:
   '@types/node': ^16.11.45
   '@types/react': ^18.0.15
   '@types/react-dom': ^18.0.6
+  immutability-helper: ^3.1.1
   react: ^18.2.0
   react-dnd: ^16.0.1
   react-dnd-html5-backend: ^16.0.1
@@ -25,6 +26,7 @@ dependencies:
   '@types/node': registry.npmmirror.com/@types/node/16.11.45
   '@types/react': registry.npmmirror.com/@types/react/18.0.15
   '@types/react-dom': registry.npmmirror.com/@types/react-dom/18.0.6
+  immutability-helper: registry.npmmirror.com/immutability-helper/3.1.1
   react: registry.npmmirror.com/react/18.2.0
   react-dnd: registry.npmmirror.com/react-dnd/16.0.1_nbfbtpyagdw3ueoqb5i7wzxd7e
   react-dnd-html5-backend: registry.npmmirror.com/react-dnd-html5-backend/16.0.1
@@ -6818,6 +6820,12 @@ packages:
     resolution: {integrity: sha512-2eB/sswms9AEUSkOm4SbV5Y7Vmt/bKRwByd52jfLkW4OLYeaTP3EEiJ9agqU0O/tq6Dk62Zfj+TJSqfm1rLVGQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/immer/-/immer-9.0.15.tgz}
     name: immer
     version: 9.0.15
+    dev: false
+
+  registry.npmmirror.com/immutability-helper/3.1.1:
+    resolution: {integrity: sha512-Q0QaXjPjwIju/28TsugCHNEASwoCcJSyJV3uO1sOIQGI0jKgm9f41Lvz0DZj3n46cNCyAZTsEYoY4C2bVRUzyQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/immutability-helper/-/immutability-helper-3.1.1.tgz}
+    name: immutability-helper
+    version: 3.1.1
     dev: false
 
   registry.npmmirror.com/import-fresh/3.3.0:
