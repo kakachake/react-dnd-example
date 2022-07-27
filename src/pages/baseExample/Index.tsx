@@ -6,7 +6,7 @@ import "./Index.css";
 type Item = {
   _id: string;
   isDraged?: boolean;
-  onremoveCb?: () => void;
+  onremoveCb?: (id: string) => void;
   left?: number;
   top?: number;
 };
@@ -25,17 +25,13 @@ function Box({ _id, isDraged = false, onremoveCb, left, top }: Item) {
         isDragging: monitor.isDragging(),
       }),
       end: (item, monitor) => {
-        console.log(item);
-        console.log(monitor.didDrop());
-        console.log(monitor.getDropResult());
-
         const msg = (monitor.getDropResult() as any)?.msg;
         if (msg === "remove") {
-          onremoveCb && onremoveCb();
+          onremoveCb && onremoveCb(_id);
         }
       },
     };
-  }, [_id]);
+  }, [onremoveCb]);
 
   return (
     <div
@@ -79,8 +75,8 @@ function Bucket() {
       }),
       drop: (item, monitor) => {
         const delta = monitor.getSourceClientOffset();
-        console.log(offset.current);
-        console.log(delta);
+
+        console.log(itemList);
 
         if (item.isDraged) {
           const idx = itemList.findIndex((value) => value.id === item.id);
@@ -120,8 +116,10 @@ function Bucket() {
     };
   }, []);
   const removeItem = useCallback(
-    (id: number) => {
-      setItemList(itemList.filter((_, i) => _.id !== id));
+    (id: string) => {
+      console.log(itemList);
+
+      setItemList(itemList.filter((_, i) => _.id != id));
     },
     [itemList]
   );
@@ -152,7 +150,7 @@ function Bucket() {
             left={item.left}
             top={item.top}
             isDraged={true}
-            onremoveCb={() => removeItem(item.id)}
+            onremoveCb={removeItem}
           />
         ))}
       </div>
