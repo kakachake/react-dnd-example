@@ -8,6 +8,7 @@ specifiers:
   '@types/node': ^16.11.45
   '@types/react': ^18.0.15
   '@types/react-dom': ^18.0.6
+  dnd-core: ^16.0.1
   immutability-helper: ^3.1.1
   react: ^18.2.0
   react-dnd: ^16.0.1
@@ -15,6 +16,7 @@ specifiers:
   react-dom: ^18.2.0
   react-router-dom: '6'
   react-scripts: 5.0.1
+  react-transition-group: ^4.4.3
   typescript: ^4.7.4
   web-vitals: ^2.1.4
 
@@ -26,6 +28,7 @@ dependencies:
   '@types/node': registry.npmmirror.com/@types/node/16.11.45
   '@types/react': registry.npmmirror.com/@types/react/18.0.15
   '@types/react-dom': registry.npmmirror.com/@types/react-dom/18.0.6
+  dnd-core: registry.npmmirror.com/dnd-core/16.0.1
   immutability-helper: registry.npmmirror.com/immutability-helper/3.1.1
   react: registry.npmmirror.com/react/18.2.0
   react-dnd: registry.npmmirror.com/react-dnd/16.0.1_nbfbtpyagdw3ueoqb5i7wzxd7e
@@ -33,6 +36,7 @@ dependencies:
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
   react-router-dom: registry.npmmirror.com/react-router-dom/6.3.0_biqbaboplfbrettd7655fr4n2y
   react-scripts: registry.npmmirror.com/react-scripts/5.0.1_qtbnez4q7bzoc4eqybg3efzzxe
+  react-transition-group: registry.npmmirror.com/react-transition-group/4.4.3_biqbaboplfbrettd7655fr4n2y
   typescript: registry.npmmirror.com/typescript/4.7.4
   web-vitals: registry.npmmirror.com/web-vitals/2.1.4
 
@@ -5187,6 +5191,15 @@ packages:
     version: 0.2.0
     dependencies:
       utila: registry.npmmirror.com/utila/0.4.0
+    dev: false
+
+  registry.npmmirror.com/dom-helpers/5.2.1:
+    resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dom-helpers/-/dom-helpers-5.2.1.tgz}
+    name: dom-helpers
+    version: 5.2.1
+    dependencies:
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.18.9
+      csstype: registry.npmmirror.com/csstype/3.1.0
     dev: false
 
   registry.npmmirror.com/dom-serializer/0.2.2:
@@ -10353,6 +10366,23 @@ packages:
       - webpack-cli
       - webpack-hot-middleware
       - webpack-plugin-serve
+    dev: false
+
+  registry.npmmirror.com/react-transition-group/4.4.3_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-ylc4S7Pi/2rR8j0Z+5WK23oTh4o4qDKIETL4Vzw4GAGa6EEFSIN8AbT3qdXFO8Wa6aYKe0bgKewSUqw+QP7BrA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-transition-group/-/react-transition-group-4.4.3.tgz}
+    id: registry.npmmirror.com/react-transition-group/4.4.3
+    name: react-transition-group
+    version: 4.4.3
+    peerDependencies:
+      react: '>=16.6.0'
+      react-dom: '>=16.6.0'
+    dependencies:
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.18.9
+      dom-helpers: registry.npmmirror.com/dom-helpers/5.2.1
+      loose-envify: registry.npmmirror.com/loose-envify/1.4.0
+      prop-types: registry.npmmirror.com/prop-types/15.8.1
+      react: registry.npmmirror.com/react/18.2.0
+      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
     dev: false
 
   registry.npmmirror.com/react/18.2.0:
